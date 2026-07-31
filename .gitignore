@@ -23,3 +23,11 @@ go.work.sum
 
 # env file
 .env
+
+# R artifacts
+r/model.rds
+r/data_split.rds
+r/eval_results.rds
+
+# Pipeline output
+metrics.json
