@@ -1,5 +1,7 @@
 # go-rmodel-pipeline
 
+[![CI](https://img.shields.io/github/actions/workflow/status/llerandi/go-rmodel-pipeline/ci.yaml?label=CI&logo=github)](https://github.com/llerandi/go-rmodel-pipeline/actions/workflows/ci.yaml) [![License](https://img.shields.io/github/license/llerandi/go-rmodel-pipeline)](https://github.com/llerandi/go-rmodel-pipeline/blob/main/LICENSE) [![Stars](https://img.shields.io/github/stars/llerandi/go-rmodel-pipeline?style=social)](https://github.com/llerandi/go-rmodel-pipeline/stargazers) [![Last commit](https://img.shields.io/github/last-commit/llerandi/go-rmodel-pipeline)](https://github.com/llerandi/go-rmodel-pipeline/commits/main) [![Go](https://img.shields.io/badge/go-1.22%2B-blue?logo=go)](https://go.dev/) [![R](https://img.shields.io/badge/R-4.x-276DC3?logo=r)](https://www.r-project.org/)
+
 Go-orchestrated pipeline for training, evaluating, and validating R machine learning models with threshold-based quality gates.
 
 ## How it works
