@@ -60,3 +60,33 @@ If any metric falls below its threshold, the pipeline exits with code 1 - making
 - **Swap the dataset**: edit `r/train.R` to load your own data.
 - **Change thresholds**: edit the `Thresholds` variable in `main.go`.
 - **Add metrics**: extend the `Metrics` struct in `main.go` and the export in `r/export_metrics.R`.
+
+## Roadmap
+
+**Pipeline**
+- [x] Go orchestrator that runs R scripts in sequence
+- [x] R scripts for training, evaluation, and metrics export
+- [x] Threshold-based quality gates in Go
+- [ ] Configurable thresholds via CLI flags or `config.yaml`
+- [ ] R example dataset (replace `iris` placeholder)
+- [ ] Structured logging in Go (JSON output, log levels)
+- [ ] Timeout handling per R script
+- [ ] Support for regression models, not just classification
+- [ ] Model versioning: persist metrics history per run
+
+**Testing**
+- [x] GitHub Actions CI - Go build and vet
+- [x] GitHub Actions CI - R syntax check
+- [ ] Go tests for `validateMetrics`
+- [ ] Integration test that runs the full pipeline on the example dataset
+- [ ] R unit tests with `testthat`
+
+**Documentation**
+- [x] Shields in README (CI, License, Stars, Last commit, Go, R)
+- [x] `.gitignore` for R artifacts and `metrics.json`
+- [ ] Sample `metrics.json` in README
+
+**Nice to have**
+- [ ] Docker image with Go + R + dependencies
+- [ ] GitHub Actions workflow that runs the full pipeline on a sample dataset
+- [ ] Compare metrics against previous run (model regression detection)
