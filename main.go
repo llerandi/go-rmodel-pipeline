@@ -2,11 +2,23 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"os"
 	"os/exec"
+
+	"gopkg.in/yaml.v3"
 )
+
+// Config holds the contents of config.yaml.
+type Config struct {
+	Thresholds struct {
+		ROCAUC   float64 `yaml:"roc_auc"`
+		Accuracy float64 `yaml:"accuracy"`
+		FMeasure float64 `yaml:"f_measure"`
+	} `yaml:"thresholds"`
+}
 
 // Metrics holds the model evaluation results exported by R.
 type Metrics struct {
@@ -15,11 +27,16 @@ type Metrics struct {
 	FMeasure float64 `json:"f_measure"`
 }
 
-// Thresholds defines the minimum acceptable values for each metric.
-var Thresholds = Metrics{
-	ROCAUC:   0.80,
-	Accuracy: 0.75,
-	FMeasure: 0.70,
+func loadConfig(path string) (Config, error) {
+	var cfg Config
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return cfg, fmt.Errorf("could not read %s: %w", path, err)
+	}
+	if err := yaml.Unmarshal(data, &cfg); err != nil {
+		return cfg, fmt.Errorf("could not parse %s: %w", path, err)
+	}
+	return cfg, nil
 }
 
 func runRScript(script string) error {
@@ -30,7 +47,7 @@ func runRScript(script string) error {
 	return cmd.Run()
 }
 
-func validateMetrics(path string) error {
+func validateMetrics(path string, thresholds Metrics) error {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return fmt.Errorf("could not read %s: %w", path, err)
@@ -42,19 +59,19 @@ func validateMetrics(path string) error {
 	}
 
 	fmt.Printf("\n>>> Metrics\n")
-	fmt.Printf("  ROC-AUC:   %.4f (threshold: %.2f)\n", m.ROCAUC, Thresholds.ROCAUC)
-	fmt.Printf("  Accuracy:  %.4f (threshold: %.2f)\n", m.Accuracy, Thresholds.Accuracy)
-	fmt.Printf("  F-Measure: %.4f (threshold: %.2f)\n", m.FMeasure, Thresholds.FMeasure)
+	fmt.Printf("  ROC-AUC:   %.4f (threshold: %.2f)\n", m.ROCAUC, thresholds.ROCAUC)
+	fmt.Printf("  Accuracy:  %.4f (threshold: %.2f)\n", m.Accuracy, thresholds.Accuracy)
+	fmt.Printf("  F-Measure: %.4f (threshold: %.2f)\n", m.FMeasure, thresholds.FMeasure)
 
 	var failures []string
-	if m.ROCAUC < Thresholds.ROCAUC {
-		failures = append(failures, fmt.Sprintf("ROC-AUC %.4f < %.2f", m.ROCAUC, Thresholds.ROCAUC))
+	if m.ROCAUC < thresholds.ROCAUC {
+		failures = append(failures, fmt.Sprintf("ROC-AUC %.4f < %.2f", m.ROCAUC, thresholds.ROCAUC))
 	}
-	if m.Accuracy < Thresholds.Accuracy {
-		failures = append(failures, fmt.Sprintf("Accuracy %.4f < %.2f", m.Accuracy, Thresholds.Accuracy))
+	if m.Accuracy < thresholds.Accuracy {
+		failures = append(failures, fmt.Sprintf("Accuracy %.4f < %.2f", m.Accuracy, thresholds.Accuracy))
 	}
-	if m.FMeasure < Thresholds.FMeasure {
-		failures = append(failures, fmt.Sprintf("F-Measure %.4f < %.2f", m.FMeasure, Thresholds.FMeasure))
+	if m.FMeasure < thresholds.FMeasure {
+		failures = append(failures, fmt.Sprintf("F-Measure %.4f < %.2f", m.FMeasure, thresholds.FMeasure))
 	}
 
 	if len(failures) > 0 {
@@ -70,6 +87,32 @@ func validateMetrics(path string) error {
 }
 
 func main() {
+	flagROCAUC   := flag.Float64("roc-auc", -1, "override ROC-AUC threshold from config.yaml")
+	flagAccuracy := flag.Float64("accuracy", -1, "override Accuracy threshold from config.yaml")
+	flagFMeasure := flag.Float64("f-measure", -1, "override F-Measure threshold from config.yaml")
+	flag.Parse()
+
+	cfg, err := loadConfig("config.yaml")
+	if err != nil {
+		log.Fatalf("Error loading config: %v", err)
+	}
+
+	thresholds := Metrics{
+		ROCAUC:   cfg.Thresholds.ROCAUC,
+		Accuracy: cfg.Thresholds.Accuracy,
+		FMeasure: cfg.Thresholds.FMeasure,
+	}
+
+	if *flagROCAUC >= 0 {
+		thresholds.ROCAUC = *flagROCAUC
+	}
+	if *flagAccuracy >= 0 {
+		thresholds.Accuracy = *flagAccuracy
+	}
+	if *flagFMeasure >= 0 {
+		thresholds.FMeasure = *flagFMeasure
+	}
+
 	scripts := []string{
 		"r/train.R",
 		"r/evaluate.R",
@@ -82,7 +125,7 @@ func main() {
 		}
 	}
 
-	if err := validateMetrics("metrics.json"); err != nil {
+	if err := validateMetrics("metrics.json", thresholds); err != nil {
 		log.Fatal(err)
 	}
 }
