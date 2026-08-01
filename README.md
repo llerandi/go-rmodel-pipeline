@@ -16,27 +16,37 @@ go run main.go
     └── Go reads metrics.json → checks thresholds → exit 0 / exit 1
 ```
 
-## Requirements
-
-- Go 1.22+
-- R 4.4 with the following packages: `tidymodels`, `ranger`, `jsonlite`
-
-Install R packages:
-```r
-install.packages(c("tidymodels", "ranger", "jsonlite"))
-```
-
-## Usage
+## Quick start
 
 ```bash
+# 1. Clone and enter the repo
+git clone https://github.com/llerandi/go-rmodel-pipeline.git
+cd go-rmodel-pipeline
+
+# 2. Download Go dependencies
+go mod tidy
+
+# 3. Install R packages (once)
+Rscript -e 'install.packages(c("tidymodels", "ranger", "jsonlite"))'
+
+# 4. Add your data - edit r/train.R to load your own dataset
+
+# 5. Adjust thresholds if needed - edit config.yaml
+
+# 6. Run
 go run main.go
 ```
 
-Thresholds are read from `config.yaml`. Override any of them at runtime with CLI flags:
+Override any threshold at runtime without editing `config.yaml`:
 
 ```bash
 go run main.go --roc-auc 0.85 --accuracy 0.80 --f-measure 0.75
 ```
+
+## Requirements
+
+- Go 1.22+
+- R 4.4 with packages: `tidymodels`, `ranger`, `jsonlite`
 
 ## Quality gates
 
@@ -64,7 +74,7 @@ If any metric falls below its threshold, the pipeline exits with code 1 - making
 ## Customisation
 
 - **Swap the dataset**: edit `r/train.R` to load your own data.
-- **Change thresholds**: edit the `Thresholds` variable in `main.go`.
+- **Change thresholds**: edit `config.yaml`, or use `--roc-auc`, `--accuracy`, `--f-measure` flags at runtime.
 - **Add metrics**: extend the `Metrics` struct in `main.go` and the export in `r/export_metrics.R`.
 
 ## Roadmap
