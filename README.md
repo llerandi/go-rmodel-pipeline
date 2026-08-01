@@ -32,6 +32,12 @@ install.packages(c("tidymodels", "ranger", "jsonlite"))
 go run main.go
 ```
 
+Thresholds are read from `config.yaml`. Override any of them at runtime with CLI flags:
+
+```bash
+go run main.go --roc-auc 0.85 --accuracy 0.80 --f-measure 0.75
+```
+
 ## Quality gates
 
 | Metric    | Threshold |
@@ -67,7 +73,7 @@ If any metric falls below its threshold, the pipeline exits with code 1 - making
 - [x] Go orchestrator that runs R scripts in sequence
 - [x] R scripts for training, evaluation, and metrics export
 - [x] Threshold-based quality gates in Go
-- [ ] Configurable thresholds via CLI flags or `config.yaml`
+- [x] Configurable thresholds via `config.yaml` with CLI flag overrides
 - [ ] R example dataset (replace `iris` placeholder)
 - [ ] Structured logging in Go (JSON output, log levels)
 - [ ] Timeout handling per R script

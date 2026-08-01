@@ -227,7 +227,7 @@
         <div class="step-num">4</div>
         <div class="step-body">
           <strong>Run the pipeline</strong>
-          <span><code>go run main.go</code></span>
+          <span><code>go run main.go</code> - thresholds are read from <code>config.yaml</code>. Override at runtime: <code>go run main.go --roc-auc 0.85</code></span>
         </div>
       </div>
     </div>
@@ -260,7 +260,7 @@
       <div class="step">
         <div class="step-body">
           <strong>Change thresholds</strong>
-          <span>Edit the <code>Thresholds</code> variable in <code>main.go</code>.</span>
+          <span>Edit <code>config.yaml</code>, or override at runtime with <code>--roc-auc</code>, <code>--accuracy</code>, <code>--f-measure</code> flags.</span>
         </div>
       </div>
       <div class="step">

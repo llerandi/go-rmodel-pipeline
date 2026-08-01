@@ -1,0 +1,4 @@
+thresholds:
+  roc_auc: 0.80
+  accuracy: 0.75
+  f_measure: 0.70
