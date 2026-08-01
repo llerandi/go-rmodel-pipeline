@@ -205,29 +205,43 @@
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-body">
-          <strong>Install dependencies</strong>
-          <span>Go 1.22+ and R 4.4. Install R packages: <code>tidymodels</code>, <code>ranger</code>, <code>jsonlite</code>.</span>
+          <strong>Clone the repository</strong>
+          <span><code>git clone https://github.com/llerandi/go-rmodel-pipeline.git && cd go-rmodel-pipeline</code></span>
         </div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
         <div class="step-body">
-          <strong>Clone the repository</strong>
-          <span><code>git clone https://github.com/llerandi/go-rmodel-pipeline.git</code></span>
+          <strong>Download Go dependencies</strong>
+          <span><code>go mod tidy</code></span>
         </div>
       </div>
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-body">
-          <strong>Swap in your data</strong>
-          <span>Edit <code>r/train.R</code> to load your own dataset instead of the example.</span>
+          <strong>Install R packages (once)</strong>
+          <span><code>Rscript -e 'install.packages(c("tidymodels", "ranger", "jsonlite"))'</code></span>
         </div>
       </div>
       <div class="step">
         <div class="step-num">4</div>
         <div class="step-body">
+          <strong>Add your data</strong>
+          <span>Edit <code>r/train.R</code> to load your own dataset.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <strong>Adjust thresholds</strong>
+          <span>Edit <code>config.yaml</code>, or override at runtime with <code>--roc-auc</code>, <code>--accuracy</code>, <code>--f-measure</code> flags.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
           <strong>Run the pipeline</strong>
-          <span><code>go run main.go</code> - thresholds are read from <code>config.yaml</code>. Override at runtime: <code>go run main.go --roc-auc 0.85</code></span>
+          <span><code>go run main.go</code></span>
         </div>
       </div>
     </div>
