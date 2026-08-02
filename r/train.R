@@ -1,16 +1,19 @@
 # train.R
 # Trains a Random Forest classifier using tidymodels and saves the workflow.
+# Dataset: modeldata::cells (binary classification - cell segmentation quality).
 
 library(tidymodels)
+library(modeldata)
 library(ranger)
 
 set.seed(42)
 
-# Load data - replace with your own dataset
-data <- iris |>
-  mutate(target = ifelse(Species == "setosa", "yes", "no") |> factor())
+data("cells", package = "modeldata")
 
-split <- initial_split(data, prop = 0.8, strata = target)
+# Remove case column (train/test indicator from the original study)
+cells <- cells |> select(-case)
+
+split <- initial_split(cells, prop = 0.8, strata = class)
 train <- training(split)
 test  <- testing(split)
 
@@ -18,8 +21,7 @@ test  <- testing(split)
 saveRDS(list(train = train, test = test), "r/data_split.rds")
 
 # Recipe
-rec <- recipe(target ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width,
-              data = train) |>
+rec <- recipe(class ~ ., data = train) |>
   step_normalize(all_numeric_predictors())
 
 # Model spec
