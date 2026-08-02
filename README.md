@@ -27,7 +27,7 @@ cd go-rmodel-pipeline
 go mod tidy
 
 # 3. Install R packages (once)
-Rscript -e 'install.packages(c("tidymodels", "ranger", "jsonlite"))'
+Rscript -e 'install.packages(c("tidymodels", "ranger", "modeldata", "jsonlite"))'
 
 # 4. Add your data - edit r/train.R to load your own dataset
 
@@ -46,7 +46,7 @@ go run main.go --roc-auc 0.85 --accuracy 0.80 --f-measure 0.75
 ## Requirements
 
 - Go 1.22+
-- R 4.4 with packages: `tidymodels`, `ranger`, `jsonlite`
+- R 4.4 with packages: `tidymodels`, `ranger`, `modeldata`, `jsonlite`
 
 ## Quality gates
 
@@ -84,7 +84,7 @@ If any metric falls below its threshold, the pipeline exits with code 1 - making
 - [x] R scripts for training, evaluation, and metrics export
 - [x] Threshold-based quality gates in Go
 - [x] Configurable thresholds via `config.yaml` with CLI flag overrides
-- [ ] R example dataset (replace `iris` placeholder)
+- [x] R example dataset (`modeldata::cells` - binary classification)
 - [ ] Structured logging in Go (JSON output, log levels)
 - [ ] Timeout handling per R script
 - [ ] Support for regression models, not just classification
