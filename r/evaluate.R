@@ -11,9 +11,9 @@ preds <- augment(wf, new_data = test)
 
 metrics <- metric_set(roc_auc, accuracy, f_meas)
 results <- metrics(preds,
-                   truth    = target,
+                   truth    = class,
                    estimate = .pred_class,
-                   .pred_yes,
+                   .pred_PS,
                    event_level = "first")
 
 print(results)
