@@ -93,7 +93,7 @@ If any metric falls below its threshold, the pipeline exits with code 1 - making
 **Testing**
 - [x] GitHub Actions CI - Go build and vet
 - [x] GitHub Actions CI - R syntax check
-- [ ] Go tests for `validateMetrics`
+- [x] Go tests for `validateMetrics`
 - [ ] Integration test that runs the full pipeline on the example dataset
 - [ ] R unit tests with `testthat`
 
