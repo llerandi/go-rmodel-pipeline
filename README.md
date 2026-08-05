@@ -58,6 +58,18 @@ go run main.go --roc-auc 0.85 --accuracy 0.80 --f-measure 0.75
 
 If any metric falls below its threshold, the pipeline exits with code 1 - making it suitable as a CI/CD gate.
 
+## Sample output
+
+After a successful run, `metrics.json` looks like:
+
+```json
+{
+  "roc_auc": 0.9247,
+  "accuracy": 0.8611,
+  "f_measure": 0.8034
+}
+```
+
 ## Project structure
 
 ```
@@ -100,7 +112,7 @@ If any metric falls below its threshold, the pipeline exits with code 1 - making
 **Documentation**
 - [x] Shields in README (CI, License, Stars, Last commit, Go, R)
 - [x] `.gitignore` for R artifacts and `metrics.json`
-- [ ] Sample `metrics.json` in README
+- [x] Sample `metrics.json` in README
 
 **Nice to have**
 - [ ] Docker image with Go + R + dependencies
